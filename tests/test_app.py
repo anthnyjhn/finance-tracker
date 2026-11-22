@@ -10,6 +10,7 @@ os.environ["FINANCE_DB"] = "/tmp/finance-test.db"
 from fastapi.testclient import TestClient  # noqa: E402
 
 from app import calc, db, exporters, main  # noqa: E402
+from app import tax  # noqa: E402
 
 TODAY = date(2026, 11, 22)
 
@@ -45,8 +46,15 @@ def test_spreadsheet_numbers(conn):
     assert h["invested"] == 10900 and h["profit"] == -591.75
 
     t = s["tax"]
-    assert t["taxable"] == 66191.29 and t["income_tax"] == 10645.39 and t["total_tax"] == 11966.07
-    assert t["refund"] == 479.93
+    # Spreadsheet: taxable 66,191.29, tax 10,645.39, Medicare 1,320.68 (typed in), refund 479.93.
+    # Corrected: whole-dollar taxable income, LITO applied, Medicare levy = 2% of taxable income.
+    assert t["taxable"] == 66191 and t["gross_tax"] == 10645.30
+    assert t["lito"] == pytest.approx(7.14, abs=0.01)
+    assert t["medicare"] == 1323.82
+    assert t["refund"] == pytest.approx(484.02, abs=0.01)
+    # Jay's interest received in FY 2025-26 (Apr, May, Jun 2026) is flagged as assessable income.
+    assert t["parked_interest"] == 126
+    assert any("Tool Replaced (445.00)" in w for w in t["warnings"])
 
     nw = s["networth"]
     groups = {g["name"]: g["amount"] for g in nw["groups"]}
@@ -97,3 +105,41 @@ def test_api(conn):
         assert r.json()["skipped_duplicates"] == 1
         backup = client.get("/api/export/json").content
         assert client.post("/api/import/backup", files={"file": ("b.json", backup)}).status_code == 200
+
+
+def test_tax_rules():
+    # LITO: full $700 to $37,500, nil from $66,667
+    assert tax.lito(37500) == 700 and tax.lito(45000) == 325 and tax.lito(66667) == 0
+    # Medicare levy shades in at 10c/$ above the low-income threshold
+    assert tax.medicare_levy(28011, 2, 28011) == 0
+    assert tax.medicare_levy(30000, 2, 28011) == pytest.approx(198.9)
+    assert tax.medicare_levy(50000, 2, 28011) == 1000
+    # HELP 2025-26: 15c/$ over 67,000; 8,700 + 17c over 125,000; capped at 10% of income
+    h = tax.PRESETS["2025-26"]["help"]
+    assert tax.help_repayment(67000, h) == 0
+    assert tax.help_repayment(77000, h) == pytest.approx(1500)
+    assert tax.help_repayment(135000, h) == pytest.approx(10400)
+    assert tax.help_repayment(300000, h) == pytest.approx(30000)
+    # MLS applies to the whole income once over a tier
+    assert tax.mls(110000, tax.PRESETS["2025-26"]["mls_tiers"]) == (1100.0, 1.0)
+    # Diminishing value: $540 phone, 3-year life, bought 1 Jan 2026 -> 181 days in FY 2025-26
+    s, e = tax.fy_range("2025-26")
+    assert tax.decline_in_value(540, 3, date(2026, 1, 1), s, e) == pytest.approx(540 * 2 / 3 * 181 / 365)
+    # second year starts from the reduced value
+    s2, e2 = tax.fy_range("2026-27")
+    first = 540 * 2 / 3 * 181 / 365
+    assert tax.decline_in_value(540, 3, date(2026, 1, 1), s2, e2) == pytest.approx((540 - first) * 2 / 3)
+    # brackets
+    assert tax.income_tax(45000, tax.RES_2526) == pytest.approx(4288)
+    assert tax.income_tax(45000, tax.RES_2627) == pytest.approx(4020)
+    assert tax.income_tax(50000, tax.FOREIGN) == pytest.approx(15000)
+
+
+def test_standard_deduction_and_residency():
+    items = [{"section": "income", "name": "Salary", "amount": 60000},
+             {"section": "work_expense", "name": "Boots", "amount": 99}]
+    cfg = {**tax.preset("2026-27"), "withheld": 0}
+    r = tax.calculate(items, cfg)
+    assert r["standard_used"] and r["work_expenses"] == 1000 and r["taxable"] == 59000
+    r = tax.calculate(items, {**tax.preset("2025-26", "foreign"), "withheld": 0})
+    assert r["lito"] == 0 and r["medicare"] == 0 and r["gross_tax"] == pytest.approx(59901 * 0.30)

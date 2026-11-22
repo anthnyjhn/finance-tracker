@@ -14,6 +14,7 @@ from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 
 from . import calc, db, exporters
+from . import tax as taxcalc
 
 BASE = Path(__file__).resolve().parent
 SEED = BASE / "seed.json"
@@ -78,6 +79,21 @@ def put_config(values: dict = Body(...)):
             db.set_config(conn, values)
         except KeyError as e:
             raise HTTPException(400, f"Unknown setting {e}")
+        return db.get_config(conn)
+
+
+@app.get("/api/tax/presets")
+def tax_presets():
+    return {"years": list(taxcalc.PRESETS), "residency": ["resident", "foreign", "whm"]}
+
+
+@app.post("/api/tax/preset")
+def apply_tax_preset(year: str = Body(...), residency: str = Body("resident")):
+    if year not in taxcalc.PRESETS or residency not in ("resident", "foreign", "whm"):
+        raise HTTPException(400, "Unknown year or residency")
+    with db.session() as conn:
+        cfg = db.get_config(conn)
+        db.set_config(conn, {"tax": {**cfg["tax"], **taxcalc.preset(year, residency)}})
         return db.get_config(conn)
 
 

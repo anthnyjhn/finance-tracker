@@ -121,7 +121,7 @@ async function editor(el, opt) {
       return `<select ${attrs}>${c.options.map(o => { const [val, lab] = Array.isArray(o) ? o : [o, o]; return `<option value="${esc(val)}" ${String(v ?? '') === String(val) ? 'selected' : ''}>${esc(lab)}</option>`; }).join('')}</select>`;
     }
     if (c.type === 'check') return `<input type="checkbox" ${attrs} ${v ? 'checked' : ''}>`;
-    if (c.type === 'number') return `<input type="number" step="${c.step || '0.01'}" ${attrs} value="${v ?? ''}">`;
+    if (c.type === 'number') return `<input type="number" step="${c.step || '0.01'}" ${attrs} value="${v ?? ''}" ${c.placeholder ? `placeholder="${esc(c.placeholder)}"` : ''}>`;
     if (c.type === 'date') return `<input type="date" ${attrs} value="${esc(v || '')}">`;
     return `<input type="text" ${attrs} value="${esc(v ?? '')}" ${c.list ? `list="${listId(c)}"` : ''}>`;
   }
@@ -560,42 +560,93 @@ PAGES.forecast = { title: 'Forecast', async render(el) {
 } };
 
 PAGES.tax = { title: 'Tax return', async render(el) {
-  el.innerHTML = `<div class="grid">
-    <div class="card"><h2>Annual income</h2><div id="tInc"></div></div>
-    <div class="card"><h2>Work-related expenses</h2><div id="tWork"></div></div>
-    <div class="card"><h2>Other deductions</h2><div id="tDed"></div></div>
-    <div class="card"><h2>Tax paid & levy</h2><div class="fields">${cfgInput('tax.year', 'Financial year', 'text')}${cfgInput('tax.withheld', 'Salary tax withheld')}${cfgInput('tax.medicare', 'Medicare levy ($)')}${cfgInput('tax.medicare_auto', 'Calculate levy automatically', 'check')}${cfgInput('tax.medicare_rate', 'Levy rate %')}</div></div>
-    <div class="card"><h2>Tax brackets</h2><p class="hint">Keep these up to date each financial year.</p><div id="tBr"></div></div>
-    <div class="card"><h2>Estimate</h2><div id="tOut"></div><p class="hint" style="margin-top:12px">Estimates only — actual results vary with tax offsets, HELP/HECS repayments and other adjustments.</p></div>
-  </div>`;
+  const presets = await api('GET', '/api/tax/presets');
+  const T = () => CFG.tax;
+  const resLabel = { resident: 'Australian resident', foreign: 'Foreign resident', whm: 'Working holiday maker' };
+  el.innerHTML = `
+    <div class="card"><h2>Tax year & situation</h2>
+      <div class="fields">
+        <label class="field">Financial year<select id="tYear">${[...new Set([...presets.years, T().year])].map(y => `<option ${y === T().year ? 'selected' : ''}>${esc(y)}</option>`).join('')}</select></label>
+        <label class="field">Residency for tax<select id="tRes">${presets.residency.map(r => `<option value="${r}" ${r === T().residency ? 'selected' : ''}>${resLabel[r]}</option>`).join('')}</select></label>
+        ${cfgInput('tax.withheld', 'Tax withheld (from payment summary)')}
+        ${cfgInput('tax.help_debt', 'I have a HELP / study loan', 'check')}
+        ${cfgInput('tax.private_cover', 'Private hospital cover all year', 'check')}
+      </div>
+      <p class="hint">Changing the year or residency loads the ATO rates for it. Get the exact tax-withheld figure from your income statement in myGov.</p>
+    </div>
+    <div class="grid">
+      <div class="card"><h2>Annual income</h2><p class="hint">Salary (gross), bank interest, interest from private loans, net capital gains (e.g. selling crypto), etc.</p><div id="tInc"></div><div id="tSuggest"></div></div>
+      <div class="card"><h2>Other deductions</h2><p class="hint">Tax agent fees, donations to registered charities, income protection insurance, etc.</p><div id="tDed"></div></div>
+      <div class="card wide"><h2>Work-related expenses</h2>
+        <p class="hint">Only the work-use share is deductible. Equipment costing over $300 must be depreciated: enter its <b>effective life</b> (e.g. mobile phone 3 yrs, laptop 2 yrs) and <b>purchase date</b>, and the app calculates this year's decline in value (diminishing value method). Leave life blank for running costs and items $300 or less.</p>
+        <div id="tWork"></div><div id="tClaims" style="margin-top:12px"></div></div>
+      <div class="card"><h2>Estimate</h2><div id="tOut"></div></div>
+      <div class="card"><h2>Things to check</h2><div id="tWarn"></div></div>
+      <div class="card wide"><details><summary>Advanced: rates & thresholds</summary>
+        <div class="grid">
+          <div><h2>Income tax brackets</h2><div id="tBr"></div></div>
+          <div><h2>Medicare</h2><div class="fields">
+            ${cfgInput('tax.medicare_mode', 'Medicare levy', 'select', ['auto', 'manual', 'exempt'])}${cfgInput('tax.medicare_rate', 'Levy rate %')}
+            ${cfgInput('tax.medicare_low', 'No levy at or below')}${cfgInput('tax.medicare', 'Manual levy amount')}</div>
+            <h2>Study loan</h2><div class="fields">${cfgInput('tax.help.threshold', 'Repayments start above')}${cfgInput('tax.help.rate1', 'Rate % (first band)')}${cfgInput('tax.help.upper', 'Second band starts above')}${cfgInput('tax.help.base2', 'Second band base $')}${cfgInput('tax.help.rate2', 'Rate % (second band)')}${cfgInput('tax.help_extra_income', 'Extra repayment income (salary sacrifice etc.)')}</div>
+            <h2>Other</h2><div class="fields">${cfgInput('tax.lito', 'Low income tax offset', 'check')}${cfgInput('tax.standard_deduction', 'Standard work deduction $')}</div>
+          </div>
+        </div></details></div>
+    </div>`;
   bindCfg(el);
+  const applyPreset = async () => {
+    CFG = await api('POST', '/api/tax/preset', { year: $('#tYear').value, residency: $('#tRes').value });
+    changed(); route();
+  };
+  $('#tYear').addEventListener('change', applyPreset);
+  $('#tRes').addEventListener('change', applyPreset);
   const cols = [{ key: 'name', label: 'Item' }, { key: 'amount', label: 'Amount', type: 'number', width: '130px' }];
-  await editor($('#tInc'), { table: 'tax_items', filter: { section: 'income' }, cols, totals: ['amount'], defaults: () => ({ name: 'Income', amount: 0 }), addLabel: 'Add income' });
-  await editor($('#tWork'), { table: 'tax_items', filter: { section: 'work_expense' }, cols, totals: ['amount'], defaults: () => ({ name: 'Expense', amount: 0 }), addLabel: 'Add expense' });
+  const incEd = await editor($('#tInc'), { table: 'tax_items', filter: { section: 'income' }, cols, totals: ['amount'], defaults: () => ({ name: 'Income', amount: 0 }), addLabel: 'Add income' });
   await editor($('#tDed'), { table: 'tax_items', filter: { section: 'deduction' }, cols, totals: ['amount'], defaults: () => ({ name: 'Deduction', amount: 0 }), addLabel: 'Add deduction' });
+  await editor($('#tWork'), { table: 'tax_items', filter: { section: 'work_expense' }, cols: [
+    { key: 'name', label: 'Item' }, { key: 'amount', label: 'Cost', type: 'number', width: '120px' },
+    { key: 'work_pct', label: 'Work use %', type: 'number', step: '1', width: '110px', placeholder: '100' },
+    { key: 'life', label: 'Effective life (yrs)', type: 'number', step: 'any', width: '130px', placeholder: '—' },
+    { key: 'date', label: 'Purchase date', type: 'date', width: '160px' }],
+    defaults: () => ({ name: 'Expense', amount: 0, work_pct: 100 }), addLabel: 'Add expense' });
+  $('#tSuggest').addEventListener('click', async e => {
+    if (!e.target.closest('[data-addint]')) return;
+    await api('POST', '/api/t/tax_items', { section: 'income', name: 'Interest from family loan (Money parked)', amount: S.tax.parked_interest });
+    await incEd.reload(); changed();
+  });
   const drawBrackets = () => {
-    const bs = CFG.tax.brackets;
+    const bs = T().brackets;
     $('#tBr').innerHTML = `<table><thead><tr><th>Income over</th><th>Up to</th><th class="num">Rate %</th><th></th></tr></thead><tbody>${bs.map((b, i) => `<tr><td style="width:30%"><input type="number" data-br="${i}" data-f="from" value="${b.from}"></td><td class="muted">${bs[i + 1] ? bs[i + 1].from.toLocaleString() : 'and over'}</td><td><input type="number" step="any" data-br="${i}" data-f="rate" value="${b.rate}"></td><td><button class="icon" data-brdel="${i}" aria-label="Delete bracket">✕</button></td></tr>`).join('')}</tbody></table><div class="row" style="margin-top:8px"><button id="brAdd">+ Add bracket</button></div>`;
   };
   drawBrackets();
-  const saveBr = async bs => { bs.sort((a, b) => a.from - b.from); CFG = await api('PUT', '/api/config', { tax: { ...CFG.tax, brackets: bs } }); drawBrackets(); changed(); };
-  $('#tBr').addEventListener('change', e => { const t = e.target; if (t.dataset.br === undefined) return; const bs = structuredClone(CFG.tax.brackets); bs[t.dataset.br][t.dataset.f] = Number(t.value); saveBr(bs); });
+  const saveBr = async bs => { bs.sort((a, b) => a.from - b.from); CFG = await api('PUT', '/api/config', { tax: { ...T(), brackets: bs } }); drawBrackets(); changed(); };
+  $('#tBr').addEventListener('change', e => { const t = e.target; if (t.dataset.br === undefined) return; e.stopPropagation(); const bs = structuredClone(T().brackets); bs[t.dataset.br][t.dataset.f] = Number(t.value); saveBr(bs); });
   $('#tBr').addEventListener('click', e => {
-    if (e.target.id === 'brAdd') { const bs = structuredClone(CFG.tax.brackets); bs.push({ from: (bs.at(-1)?.from || 0) + 10000, rate: 0 }); saveBr(bs); }
-    const d = e.target.closest('[data-brdel]'); if (d) { const bs = structuredClone(CFG.tax.brackets); bs.splice(Number(d.dataset.brdel), 1); saveBr(bs); }
+    if (e.target.id === 'brAdd') { const bs = structuredClone(T().brackets); bs.push({ from: (bs.at(-1)?.from || 0) + 10000, rate: 0 }); saveBr(bs); }
+    const d = e.target.closest('[data-brdel]'); if (d) { const bs = structuredClone(T().brackets); bs.splice(Number(d.dataset.brdel), 1); saveBr(bs); }
   });
   return () => {
     const t = S.tax;
-    $('#tOut').innerHTML = `<table><tbody>
-      <tr><td>Total income</td><td class="num">${money(t.total_income)}</td></tr>
-      <tr><td>− Deductions (incl. ${money(t.work_expenses)} work expenses)</td><td class="num">${money(t.deductions)}</td></tr>
-      <tr class="total"><td>Taxable income</td><td class="num">${money(t.taxable)}</td></tr>
-      <tr><td>Income tax</td><td class="num">${money(t.income_tax)}</td></tr>
-      <tr><td>Medicare levy</td><td class="num">${money(t.medicare)}</td></tr>
-      <tr class="total"><td>Total tax</td><td class="num">${money(t.total_tax)}</td></tr>
-      <tr><td>Tax withheld</td><td class="num">${money(t.withheld)}</td></tr>
+    const line = (label, v, c = '') => `<tr class="${c}"><td>${label}</td><td class="num">${v}</td></tr>`;
+    $('#tOut').innerHTML = `<p class="small muted" style="margin-top:0">${esc(t.year)} · ${fdate(t.fy_start)} – ${fdate(t.fy_end)} · ${resLabel[t.residency]}</p><table><tbody>
+      ${line('Total income', money(t.total_income))}
+      ${line(`− Work-related expenses${t.standard_used ? ' (standard deduction)' : ''}`, money(t.work_expenses))}
+      ${line('− Other deductions', money(t.other_deductions))}
+      ${line('Taxable income (whole dollars)', money(t.taxable), 'total')}
+      ${line('Tax on taxable income', money(t.gross_tax))}
+      ${t.lito ? line('− Low income tax offset', money(t.lito)) : ''}
+      ${line('Medicare levy', money(t.medicare))}
+      ${t.mls ? line(`Medicare levy surcharge (${t.mls_rate}%)`, money(t.mls)) : ''}
+      ${T().help_debt ? line(`Study loan repayment (on ${money(t.help_income)})`, money(t.help)) : ''}
+      ${line('Total tax', money(t.total_tax), 'total')}
+      ${line('Tax withheld', money(t.withheld))}
       <tr class="total"><td>${t.refund >= 0 ? 'Estimated refund' : 'Estimated amount owing'}</td><td class="num ${cls(t.refund)}">${money(Math.abs(t.refund))}</td></tr>
-      <tr class="sub"><td>Effective tax rate · marginal rate</td><td class="num">${pct(t.effective_rate)} · ${t.marginal_rate}%</td></tr></tbody></table>`;
+      ${line('Effective rate · marginal rate', `${pct(t.effective_rate)} · ${t.marginal_note}`, 'sub')}</tbody></table>
+      <p class="hint" style="margin-top:12px">An estimate only. The ATO works out offsets and levies when you lodge; your notice of assessment is final.</p>`;
+    $('#tClaims').innerHTML = t.work_rows.length ? `<table><thead><tr><th>Claim this year</th><th>Method</th><th class="num">Deductible</th></tr></thead><tbody>${t.work_rows.map(r => `<tr><td>${esc(r.name)}${r.work_pct < 100 ? ` <span class="pill">${r.work_pct}% work</span>` : ''}</td><td class="muted">${esc(r.method)}</td><td class="num">${money(r.claim)}</td></tr>`).join('')}<tr class="total"><td>Total work-related claim</td><td>${t.standard_used ? '<span class="pill">standard deduction used</span>' : ''}</td><td class="num">${money(t.work_expenses)}</td></tr></tbody></table>` : '';
+    $('#tWarn').innerHTML = t.warnings.length ? t.warnings.map(w => `<div class="warnbox">⚠ ${esc(w)}</div>`).join('') : '<p class="muted small">Nothing to flag.</p>';
+    const hasInt = t.parked_interest > 0 && !t.parked_interest_included;
+    $('#tSuggest').innerHTML = hasInt ? `<div class="row small" style="margin-top:8px"><button data-addint>+ Add ${money(t.parked_interest)} family-loan interest</button></div>` : '';
   };
 } };
 

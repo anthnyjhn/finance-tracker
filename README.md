@@ -20,7 +20,7 @@ right away.
 | **Investments** | Holdings (e.g. Bitcoin) with a purchase log, current value, profit/loss, breakdown by platform and average cost | *Crypto* |
 | **Goals** *(extended)* | The net worth and spendable goals from the sheet, plus your own goals. A goal can track an account automatically. Shows ETA and how much you need to save each month | *Networth Calculator* goals |
 | **Forecast** | Net worth and cash projection for 1–N years using your income and fixed expenses, with optional investment growth | *Networth Forecast* |
-| **Tax return** | Australian tax estimate: income, work expenses, deductions, editable tax brackets, Medicare levy, refund, effective and marginal rate | *Tax Return Calculator* |
+| **Tax return** *(rebuilt)* | Australian tax estimate with ATO rates for 2025-26 and 2026-27. Covers residents, foreign residents and working holiday makers, the low income tax offset, Medicare levy (including the low-income reduction), Medicare levy surcharge, HELP/study loan repayments and the $1,000 standard deduction (2026-27). Work expenses take a work-use % and are depreciated when they're equipment over $300. It also flags family-loan interest you haven't declared | *Tax Return Calculator* |
 | **History** *(new)* | Saves a net-worth snapshot each day you use the app. Shows growth over the last 30 days, year to date, last 12 months and the monthly average | *Networth* table |
 | **Import / export** | CSV, OFX, QIF, Excel and a full JSON backup. Also restore and reset | — |
 
@@ -137,6 +137,9 @@ Set `SEED_ON_FIRST_RUN=0` in `.env` to start with an empty database on a new ins
   "12" the sheet showed. Change it on the *Money lent* page if that's wrong.
 - **Forecast**: uses the sheet's formula. Each year adds (income − fixed expenses) × 12, and
   year 1 also adds monthly income × 12.5% (super). You can set a growth rate as well.
+- **Tax**: the sheet's bracket maths was correct. The rebuilt calculator adds the low income tax offset, works out the
+  Medicare levy instead of using a typed-in figure, and rounds taxable income down to whole dollars as the ATO does.
+  With your sheet's figures the refund estimate goes from $479.93 to $484.02, before any of the flagged items are changed.
 - **Goal time left**: uses "expected savings per month", which is $3,980 (the sheet's 1,990 × 2). You can change this.
 
 ## Development

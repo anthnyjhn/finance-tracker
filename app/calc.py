@@ -12,6 +12,7 @@ from collections import defaultdict
 from datetime import date, timedelta
 
 from . import db
+from . import tax as taxcalc
 
 CATEGORY_LABELS = {
     "cash": "Cash",
@@ -252,50 +253,11 @@ def forecast(networth_now: float, spendable_now: float, recurring: list[dict], c
     }
 
 
-# ---------------------------------------------------------------- tax (Tax Return Calculator, AU)
+# ---------------------------------------------------------------- tax (Tax Return Calculator, AU) -> see tax.py
 
-def income_tax(taxable: float, brackets: list[dict]) -> float:
-    bs = sorted(brackets, key=lambda b: b["from"])
-    tax = 0.0
-    for i, b in enumerate(bs):
-        lo = b["from"]
-        hi = bs[i + 1]["from"] if i + 1 < len(bs) else math.inf
-        if taxable > lo:
-            tax += (min(taxable, hi) - lo) * (b["rate"] or 0) / 100
-    return tax
-
-
-def tax(items: list[dict], tcfg: dict) -> dict:
-    inc = [i for i in items if i["section"] == "income"]
-    ded = [i for i in items if i["section"] == "deduction"]
-    work = [i for i in items if i["section"] == "work_expense"]
-    gross_all = sum(i["amount"] or 0 for i in inc)
-    salary = (inc[0]["amount"] or 0) if inc else 0
-    work_total = sum(i["amount"] or 0 for i in work)
-    deductions = work_total + sum(i["amount"] or 0 for i in ded)
-    taxable = gross_all - deductions
-    t = income_tax(taxable, tcfg.get("brackets") or [])
-    if tcfg.get("medicare_auto"):
-        medicare = max(taxable, 0) * float(tcfg.get("medicare_rate") or 0) / 100
-    else:
-        medicare = float(tcfg.get("medicare") or 0)
-    total_tax = t + medicare
-    withheld = float(tcfg.get("withheld") or 0)
-    return {
-        "total_income": r2(gross_all),
-        "salary": r2(salary),
-        "work_expenses": r2(work_total),
-        "deductions": r2(deductions),
-        "taxable": r2(taxable),
-        "income_tax": r2(t),
-        "medicare": r2(medicare),
-        "total_tax": r2(total_tax),
-        "withheld": r2(withheld),
-        "refund": r2(withheld - total_tax),
-        "effective_rate": (total_tax / gross_all) if gross_all else 0,
-        "marginal_rate": next((b["rate"] for b in sorted(tcfg.get("brackets") or [], key=lambda b: -b["from"])
-                               if taxable > b["from"]), 0),
-    }
+def parked_interest_in(entries: list[dict], start: date, end: date) -> float:
+    return sum(e["amount"] or 0 for e in entries
+               if e.get("kind") == "interest" and start <= (parse_date(e["date"]) or date.min) <= end)
 
 
 # ---------------------------------------------------------------- cash flow (transactions)
@@ -438,7 +400,8 @@ def build_summary(conn, today: date | None = None, record_snapshot: bool = True)
         "goals": goals,
         "budget": budget(float(cfg.get("budget_income") or 0), L("budget_items")),
         "forecast": fc,
-        "tax": tax(L("tax_items"), cfg.get("tax") or {}),
+        "tax": taxcalc.calculate(L("tax_items"), cfg.get("tax") or {},
+                                 parked_interest_in(L("parked_entries"), *taxcalc.fy_range((cfg.get("tax") or {}).get("year")))),
         "cashflow": cf,
         "snapshots": snaps,
         "growth": growth(snaps, today),

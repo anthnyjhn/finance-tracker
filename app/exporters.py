@@ -224,8 +224,10 @@ def to_xlsx(conn) -> bytes:
     t = s["tax"]
     table(ws, r, ["Tax estimate", "Amount"],
           [["Total income", t["total_income"]], ["Deductions", t["deductions"]], ["Taxable income", t["taxable"]],
-           ["Income tax", t["income_tax"]], ["Medicare levy", t["medicare"]], ["Tax withheld", t["withheld"]],
-           ["Estimated refund", t["refund"]]], (1,))
+           ["Tax on taxable income", t["gross_tax"]], ["Low income tax offset", -t["lito"]],
+           ["Medicare levy", t["medicare"]], ["Medicare levy surcharge", t["mls"]], ["Study loan repayment", t["help"]],
+           ["Total", t["total_tax"]], ["Tax withheld", t["withheld"]],
+           ["Estimated refund (negative = owing)", t["refund"]]], (1,))
 
     for name in db.TABLES:
         rows = db.list_rows(conn, name)

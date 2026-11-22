@@ -77,7 +77,8 @@ TABLES: dict[str, dict] = {
         "order": "kind, id",
     },
     "tax_items": {
-        "cols": {"section": "text", "name": "text", "amount": "real"},
+        "cols": {"section": "text", "name": "text", "amount": "real", "work_pct": "real", "life": "real",
+                 "date": "date"},
         "order": "section, id",
     },
 }
@@ -95,10 +96,19 @@ DEFAULT_CONFIG = {
     "growth_rate": 0.0,
     "tax": {
         "year": "2025-26",
+        "residency": "resident",          # resident | foreign | whm (working holiday maker)
         "withheld": 0.0,
-        "medicare": 0.0,
-        "medicare_auto": False,
+        "medicare_mode": "auto",          # auto | manual | exempt
+        "medicare": 0.0,                  # used when medicare_mode == "manual"
         "medicare_rate": 2.0,
+        "medicare_low": 28011,            # no levy at or below this; shades in at 10c/$ above it
+        "lito": True,                     # low income tax offset (residents)
+        "private_cover": True,            # private hospital cover held all year (no Medicare levy surcharge)
+        "mls_tiers": [{"from": 101000, "rate": 1.0}, {"from": 118000, "rate": 1.25}, {"from": 158000, "rate": 1.5}],
+        "help_debt": False,
+        "help": {"threshold": 67000, "rate1": 15, "upper": 125000, "base2": 8700, "rate2": 17},
+        "help_extra_income": 0.0,         # reportable super contributions, fringe benefits, net investment losses
+        "standard_deduction": 0.0,        # $1,000 instant deduction from 2026-27
         "brackets": [
             {"from": 0, "rate": 0},
             {"from": 18200, "rate": 16},
@@ -149,6 +159,11 @@ def init_db() -> bool:
     """Create tables. Returns True when the database is brand new (empty)."""
     with session() as conn:
         conn.executescript(_schema())
+        for name, spec in TABLES.items():  # add columns introduced after a database was created
+            have = {r["name"] for r in conn.execute(f"PRAGMA table_info({name})")}
+            for c, t in spec["cols"].items():
+                if c not in have:
+                    conn.execute(f"ALTER TABLE {name} ADD COLUMN {c} {SQL_TYPES[t]}")
         new = conn.execute("SELECT COUNT(*) FROM config").fetchone()[0] == 0
     return new
 
@@ -158,7 +173,10 @@ def init_db() -> bool:
 def get_config(conn) -> dict:
     cfg = json.loads(json.dumps(DEFAULT_CONFIG))
     for row in conn.execute("SELECT key, value FROM config"):
-        cfg[row["key"]] = json.loads(row["value"])
+        val = json.loads(row["value"])
+        if isinstance(cfg.get(row["key"]), dict) and isinstance(val, dict):
+            val = {**cfg[row["key"]], **val}
+        cfg[row["key"]] = val
     return cfg
 
 
