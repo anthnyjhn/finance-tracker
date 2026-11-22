@@ -1,0 +1,18 @@
+services:
+  finance-tracker:
+    build: .
+    image: finance-tracker:latest
+    container_name: finance-tracker
+    restart: unless-stopped
+    ports:
+      - "8004:8004"
+    volumes:
+      - finance-data:/data    # the SQLite database (finance.db) lives in this Docker volume
+    env_file:
+      - path: .env
+        required: false       # copy .env.example to .env to set a login password
+    environment:
+      - TZ=${TZ:-Australia/Sydney}
+
+volumes:
+  finance-data:

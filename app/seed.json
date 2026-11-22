@@ -1,0 +1,1308 @@
+{
+ "format": "finance-tracker-backup",
+ "version": 1,
+ "config": {
+  "currency": "AUD",
+  "locale": "en-AU",
+  "budget_income": 2125.37,
+  "budget_period": "fortnightly",
+  "monthly_savings": 3980,
+  "forecast_years": 10,
+  "super_rate": 0.125,
+  "growth_rate": 0.0,
+  "tax": {
+   "year": "2025-26",
+   "withheld": 12446.0,
+   "medicare": 1320.68,
+   "medicare_auto": false,
+   "medicare_rate": 2.0,
+   "brackets": [
+    {
+     "from": 0,
+     "rate": 0.0
+    },
+    {
+     "from": 18200,
+     "rate": 16.0
+    },
+    {
+     "from": 45000,
+     "rate": 30.0
+    },
+    {
+     "from": 135000,
+     "rate": 37.0
+    },
+    {
+     "from": 190000,
+     "rate": 45.0
+    }
+   ]
+  }
+ },
+ "tables": {
+  "accounts": [
+   {
+    "name": "Cash on-hand",
+    "category": "cash",
+    "balance": 1115.0,
+    "spendable": 1,
+    "notes": "",
+    "sort": 1,
+    "id": 1
+   },
+   {
+    "name": "Savings",
+    "category": "savings",
+    "balance": 5111.32,
+    "spendable": 1,
+    "notes": "Bank total 28,696.96 minus investments 23,585.64",
+    "sort": 2,
+    "id": 2
+   },
+   {
+    "name": "Investments",
+    "category": "investment",
+    "balance": 23585.64,
+    "spendable": 1,
+    "notes": "",
+    "sort": 3,
+    "id": 3
+   },
+   {
+    "name": "Superannuation",
+    "category": "super",
+    "balance": 19180.0,
+    "spendable": 0,
+    "notes": "Not counted as spendable",
+    "sort": 4,
+    "id": 4
+   },
+   {
+    "name": "Car (Sonata)",
+    "category": "property",
+    "balance": 2000.0,
+    "spendable": 1,
+    "notes": "",
+    "sort": 10,
+    "id": 5
+   },
+   {
+    "name": "Car (Hilux)",
+    "category": "property",
+    "balance": 3750.0,
+    "spendable": 1,
+    "notes": "",
+    "sort": 11,
+    "id": 6
+   }
+  ],
+  "holdings": [
+   {
+    "name": "Bitcoin",
+    "symbol": "BTC",
+    "kind": "crypto",
+    "units": null,
+    "current_value": 10308.25,
+    "notes": "Networth sheet listed crypto as 9,535.02",
+    "id": 1
+   }
+  ],
+  "holding_buys": [
+   {
+    "holding_id": 1,
+    "date": "2025-11-24",
+    "amount": 2000.0,
+    "units": null,
+    "platform": "binance",
+    "notes": "",
+    "id": 1
+   },
+   {
+    "holding_id": 1,
+    "date": "2025-12-16",
+    "amount": 1000.0,
+    "units": null,
+    "platform": "binance",
+    "notes": "",
+    "id": 2
+   },
+   {
+    "holding_id": 1,
+    "date": "2026-01-15",
+    "amount": 2000.0,
+    "units": null,
+    "platform": "binance",
+    "notes": "",
+    "id": 3
+   },
+   {
+    "holding_id": 1,
+    "date": "2026-03-05",
+    "amount": 900.0,
+    "units": null,
+    "platform": "coinspot",
+    "notes": "",
+    "id": 4
+   },
+   {
+    "holding_id": 1,
+    "date": "2026-03-18",
+    "amount": 1000.0,
+    "units": null,
+    "platform": "coinspot",
+    "notes": "",
+    "id": 5
+   },
+   {
+    "holding_id": 1,
+    "date": "2026-04-29",
+    "amount": 1000.0,
+    "units": null,
+    "platform": "coinspot",
+    "notes": "",
+    "id": 6
+   },
+   {
+    "holding_id": 1,
+    "date": "2026-06-04",
+    "amount": 1000.0,
+    "units": null,
+    "platform": "coinspot",
+    "notes": "",
+    "id": 7
+   },
+   {
+    "holding_id": 1,
+    "date": "2026-06-06",
+    "amount": 1000.0,
+    "units": null,
+    "platform": "coinspot",
+    "notes": "",
+    "id": 8
+   },
+   {
+    "holding_id": 1,
+    "date": "2026-11-23",
+    "amount": 1000.0,
+    "units": null,
+    "platform": "coinspot",
+    "notes": "",
+    "id": 9
+   }
+  ],
+  "parked": [
+   {
+    "name": "Jay Parking",
+    "holder": "Jay",
+    "notes": "",
+    "id": 1
+   },
+   {
+    "name": "Mama Parking",
+    "holder": "Mama & Papa",
+    "notes": "",
+    "id": 2
+   }
+  ],
+  "parked_entries": [
+   {
+    "parked_id": 1,
+    "date": "2026-03-08",
+    "amount": 5000.0,
+    "kind": "deposit",
+    "description": "Deposit to Jay",
+    "wallet": "Savings",
+    "id": 1
+   },
+   {
+    "parked_id": 1,
+    "date": "2026-03-10",
+    "amount": 5000.0,
+    "kind": "deposit",
+    "description": "Deposit to Jay",
+    "wallet": "Savings",
+    "id": 2
+   },
+   {
+    "parked_id": 1,
+    "date": "2026-03-11",
+    "amount": 10000.0,
+    "kind": "deposit",
+    "description": "Deposit to Jay",
+    "wallet": "Savings",
+    "id": 3
+   },
+   {
+    "parked_id": 1,
+    "date": "2026-03-12",
+    "amount": 5000.0,
+    "kind": "deposit",
+    "description": "Deposit to Jay",
+    "wallet": "Savings",
+    "id": 4
+   },
+   {
+    "parked_id": 1,
+    "date": "2026-04-01",
+    "amount": 42.0,
+    "kind": "interest",
+    "description": "Interest (April)",
+    "wallet": "",
+    "id": 5
+   },
+   {
+    "parked_id": 1,
+    "date": "2026-05-01",
+    "amount": 42.0,
+    "kind": "interest",
+    "description": "Interest (May)",
+    "wallet": "",
+    "id": 6
+   },
+   {
+    "parked_id": 1,
+    "date": "2026-06-07",
+    "amount": 42.0,
+    "kind": "interest",
+    "description": "Interest (June)",
+    "wallet": "",
+    "id": 7
+   },
+   {
+    "parked_id": 1,
+    "date": "2026-07-01",
+    "amount": 42.0,
+    "kind": "interest",
+    "description": "Interest (July)",
+    "wallet": "",
+    "id": 8
+   },
+   {
+    "parked_id": 1,
+    "date": "2026-08-01",
+    "amount": 42.0,
+    "kind": "interest",
+    "description": "Interest (Aug)",
+    "wallet": "",
+    "id": 9
+   },
+   {
+    "parked_id": 1,
+    "date": "2026-09-01",
+    "amount": 42.0,
+    "kind": "interest",
+    "description": "Interest (Sep)",
+    "wallet": "",
+    "id": 10
+   },
+   {
+    "parked_id": 1,
+    "date": "2026-10-01",
+    "amount": 42.0,
+    "kind": "interest",
+    "description": "Interest (Oct)",
+    "wallet": "",
+    "id": 11
+   },
+   {
+    "parked_id": 1,
+    "date": "2026-11-01",
+    "amount": 42.0,
+    "kind": "interest",
+    "description": "Interest (Oct)",
+    "wallet": "",
+    "id": 12
+   },
+   {
+    "parked_id": 2,
+    "date": "2026-03-08",
+    "amount": 25000.0,
+    "kind": "deposit",
+    "description": "Deposit to Mama and Papa",
+    "wallet": "Savings",
+    "id": 13
+   }
+  ],
+  "loans": [
+   {
+    "name": "Lent for Van",
+    "borrower": "",
+    "interest": 0.0,
+    "installment": 221.6,
+    "frequency": "monthly",
+    "notes": "",
+    "id": 1
+   },
+   {
+    "name": "Lent for Outlander",
+    "borrower": "",
+    "interest": 0.0,
+    "installment": 250.0,
+    "frequency": "monthly",
+    "notes": "",
+    "id": 2
+   },
+   {
+    "name": "Lent to Tita Beth",
+    "borrower": "Tita Beth",
+    "interest": 0.0,
+    "installment": 0.0,
+    "frequency": "monthly",
+    "notes": "",
+    "id": 3
+   }
+  ],
+  "loan_sources": [
+   {
+    "loan_id": 1,
+    "fund": "University Funds",
+    "amount": 2535.0,
+    "id": 1
+   },
+   {
+    "loan_id": 1,
+    "fund": "Savings",
+    "amount": 400.0,
+    "id": 2
+   },
+   {
+    "loan_id": 1,
+    "fund": "Investment Funds",
+    "amount": 4400.0,
+    "id": 3
+   },
+   {
+    "loan_id": 2,
+    "fund": "Emergency Funds",
+    "amount": 8000.0,
+    "id": 4
+   },
+   {
+    "loan_id": 2,
+    "fund": "Savings",
+    "amount": 230.0,
+    "id": 5
+   },
+   {
+    "loan_id": 3,
+    "fund": "Cash",
+    "amount": 150.0,
+    "id": 6
+   }
+  ],
+  "loan_payments": [
+   {
+    "loan_id": 1,
+    "date": "2025-01-29",
+    "amount": 55.4,
+    "notes": "",
+    "id": 1
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-02-05",
+    "amount": 55.4,
+    "notes": "",
+    "id": 2
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-02-12",
+    "amount": 55.4,
+    "notes": "",
+    "id": 3
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-02-19",
+    "amount": 55.4,
+    "notes": "",
+    "id": 4
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-02-26",
+    "amount": 55.4,
+    "notes": "",
+    "id": 5
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-03-05",
+    "amount": 55.4,
+    "notes": "",
+    "id": 6
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-03-12",
+    "amount": 55.4,
+    "notes": "",
+    "id": 7
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-03-19",
+    "amount": 55.4,
+    "notes": "",
+    "id": 8
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-03-26",
+    "amount": 55.4,
+    "notes": "",
+    "id": 9
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-04-02",
+    "amount": 55.4,
+    "notes": "",
+    "id": 10
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-04-09",
+    "amount": 55.4,
+    "notes": "",
+    "id": 11
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-04-16",
+    "amount": 55.4,
+    "notes": "",
+    "id": 12
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-04-23",
+    "amount": 55.4,
+    "notes": "",
+    "id": 13
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-05-01",
+    "amount": 55.4,
+    "notes": "",
+    "id": 14
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-05-07",
+    "amount": 55.4,
+    "notes": "",
+    "id": 15
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-05-14",
+    "amount": 55.4,
+    "notes": "",
+    "id": 16
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-05-21",
+    "amount": 55.4,
+    "notes": "",
+    "id": 17
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-05-28",
+    "amount": 55.4,
+    "notes": "",
+    "id": 18
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-06-04",
+    "amount": 55.4,
+    "notes": "",
+    "id": 19
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-06-11",
+    "amount": 55.4,
+    "notes": "",
+    "id": 20
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-06-18",
+    "amount": 55.4,
+    "notes": "",
+    "id": 21
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-06-26",
+    "amount": 55.4,
+    "notes": "",
+    "id": 22
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-07-02",
+    "amount": 55.4,
+    "notes": "",
+    "id": 23
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-07-09",
+    "amount": 55.4,
+    "notes": "",
+    "id": 24
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-07-16",
+    "amount": 55.4,
+    "notes": "",
+    "id": 25
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-07-23",
+    "amount": 55.4,
+    "notes": "",
+    "id": 26
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-07-30",
+    "amount": 55.4,
+    "notes": "",
+    "id": 27
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-08-06",
+    "amount": 55.4,
+    "notes": "",
+    "id": 28
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-08-13",
+    "amount": 55.4,
+    "notes": "",
+    "id": 29
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-08-20",
+    "amount": 55.4,
+    "notes": "",
+    "id": 30
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-08-27",
+    "amount": 55.4,
+    "notes": "",
+    "id": 31
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-09-03",
+    "amount": 55.4,
+    "notes": "",
+    "id": 32
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-09-10",
+    "amount": 55.4,
+    "notes": "",
+    "id": 33
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-09-17",
+    "amount": 55.4,
+    "notes": "",
+    "id": 34
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-09-24",
+    "amount": 55.4,
+    "notes": "",
+    "id": 35
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-10-01",
+    "amount": 55.4,
+    "notes": "",
+    "id": 36
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-10-08",
+    "amount": 55.4,
+    "notes": "",
+    "id": 37
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-10-16",
+    "amount": 55.4,
+    "notes": "",
+    "id": 38
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-10-22",
+    "amount": 55.4,
+    "notes": "",
+    "id": 39
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-10-29",
+    "amount": 55.4,
+    "notes": "",
+    "id": 40
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-11-05",
+    "amount": 55.4,
+    "notes": "",
+    "id": 41
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-11-12",
+    "amount": 55.4,
+    "notes": "",
+    "id": 42
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-11-19",
+    "amount": 55.4,
+    "notes": "",
+    "id": 43
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-11-26",
+    "amount": 55.4,
+    "notes": "",
+    "id": 44
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-12-03",
+    "amount": 55.4,
+    "notes": "",
+    "id": 45
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-12-10",
+    "amount": 55.4,
+    "notes": "",
+    "id": 46
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-12-17",
+    "amount": 55.4,
+    "notes": "",
+    "id": 47
+   },
+   {
+    "loan_id": 1,
+    "date": "2025-12-24",
+    "amount": 55.4,
+    "notes": "",
+    "id": 48
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-01-02",
+    "amount": 55.4,
+    "notes": "",
+    "id": 49
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-01-07",
+    "amount": 55.4,
+    "notes": "",
+    "id": 50
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-01-14",
+    "amount": 55.4,
+    "notes": "",
+    "id": 51
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-01-21",
+    "amount": 55.4,
+    "notes": "",
+    "id": 52
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-01-28",
+    "amount": 55.4,
+    "notes": "",
+    "id": 53
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-02-04",
+    "amount": 55.4,
+    "notes": "",
+    "id": 54
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-02-11",
+    "amount": 55.4,
+    "notes": "",
+    "id": 55
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-02-18",
+    "amount": 55.4,
+    "notes": "",
+    "id": 56
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-02-25",
+    "amount": 55.4,
+    "notes": "",
+    "id": 57
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-03-04",
+    "amount": 55.4,
+    "notes": "",
+    "id": 58
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-03-11",
+    "amount": 55.4,
+    "notes": "",
+    "id": 59
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-03-18",
+    "amount": 55.4,
+    "notes": "",
+    "id": 60
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-03-25",
+    "amount": 55.4,
+    "notes": "",
+    "id": 61
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-04-01",
+    "amount": 55.4,
+    "notes": "",
+    "id": 62
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-04-08",
+    "amount": 55.4,
+    "notes": "",
+    "id": 63
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-04-15",
+    "amount": 55.4,
+    "notes": "",
+    "id": 64
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-04-22",
+    "amount": 55.4,
+    "notes": "",
+    "id": 65
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-04-29",
+    "amount": 55.4,
+    "notes": "",
+    "id": 66
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-05-06",
+    "amount": 55.4,
+    "notes": "",
+    "id": 67
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-05-13",
+    "amount": 55.4,
+    "notes": "",
+    "id": 68
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-05-20",
+    "amount": 55.4,
+    "notes": "",
+    "id": 69
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-05-27",
+    "amount": 55.4,
+    "notes": "",
+    "id": 70
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-06-03",
+    "amount": 55.4,
+    "notes": "",
+    "id": 71
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-06-10",
+    "amount": 55.4,
+    "notes": "",
+    "id": 72
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-06-17",
+    "amount": 55.4,
+    "notes": "",
+    "id": 73
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-06-24",
+    "amount": 55.4,
+    "notes": "",
+    "id": 74
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-07-01",
+    "amount": 55.4,
+    "notes": "",
+    "id": 75
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-07-08",
+    "amount": 55.4,
+    "notes": "",
+    "id": 76
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-07-15",
+    "amount": 55.4,
+    "notes": "",
+    "id": 77
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-07-22",
+    "amount": 55.4,
+    "notes": "",
+    "id": 78
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-07-29",
+    "amount": 55.4,
+    "notes": "",
+    "id": 79
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-08-05",
+    "amount": 55.4,
+    "notes": "",
+    "id": 80
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-08-12",
+    "amount": 55.4,
+    "notes": "",
+    "id": 81
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-08-19",
+    "amount": 55.4,
+    "notes": "",
+    "id": 82
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-08-26",
+    "amount": 55.4,
+    "notes": "",
+    "id": 83
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-09-02",
+    "amount": 55.4,
+    "notes": "",
+    "id": 84
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-09-09",
+    "amount": 55.4,
+    "notes": "",
+    "id": 85
+   },
+   {
+    "loan_id": 1,
+    "date": "2026-09-16",
+    "amount": 55.4,
+    "notes": "",
+    "id": 86
+   },
+   {
+    "loan_id": 2,
+    "date": "2025-05-02",
+    "amount": 250.0,
+    "notes": "",
+    "id": 87
+   },
+   {
+    "loan_id": 2,
+    "date": "2025-06-12",
+    "amount": 250.0,
+    "notes": "",
+    "id": 88
+   },
+   {
+    "loan_id": 2,
+    "date": "2025-06-21",
+    "amount": 500.0,
+    "notes": "",
+    "id": 89
+   },
+   {
+    "loan_id": 2,
+    "date": "2025-07-11",
+    "amount": 250.0,
+    "notes": "",
+    "id": 90
+   },
+   {
+    "loan_id": 2,
+    "date": "2025-08-08",
+    "amount": 250.0,
+    "notes": "",
+    "id": 91
+   },
+   {
+    "loan_id": 2,
+    "date": "2025-08-17",
+    "amount": 500.0,
+    "notes": "",
+    "id": 92
+   },
+   {
+    "loan_id": 2,
+    "date": "2025-09-04",
+    "amount": 250.0,
+    "notes": "",
+    "id": 93
+   },
+   {
+    "loan_id": 2,
+    "date": "2025-10-03",
+    "amount": 250.0,
+    "notes": "",
+    "id": 94
+   },
+   {
+    "loan_id": 2,
+    "date": "2025-11-13",
+    "amount": 250.0,
+    "notes": "",
+    "id": 95
+   },
+   {
+    "loan_id": 2,
+    "date": "2025-12-11",
+    "amount": 250.0,
+    "notes": "",
+    "id": 96
+   },
+   {
+    "loan_id": 2,
+    "date": "2026-01-09",
+    "amount": 250.0,
+    "notes": "",
+    "id": 97
+   },
+   {
+    "loan_id": 2,
+    "date": "2026-01-26",
+    "amount": 250.0,
+    "notes": "",
+    "id": 98
+   },
+   {
+    "loan_id": 2,
+    "date": "2026-02-05",
+    "amount": 250.0,
+    "notes": "",
+    "id": 99
+   },
+   {
+    "loan_id": 2,
+    "date": "2026-03-05",
+    "amount": 250.0,
+    "notes": "",
+    "id": 100
+   },
+   {
+    "loan_id": 2,
+    "date": "2026-04-02",
+    "amount": 250.0,
+    "notes": "",
+    "id": 101
+   },
+   {
+    "loan_id": 2,
+    "date": "2026-05-01",
+    "amount": 250.0,
+    "notes": "",
+    "id": 102
+   },
+   {
+    "loan_id": 2,
+    "date": "2026-06-11",
+    "amount": 250.0,
+    "notes": "",
+    "id": 103
+   },
+   {
+    "loan_id": 2,
+    "date": "2026-07-09",
+    "amount": 250.0,
+    "notes": "",
+    "id": 104
+   },
+   {
+    "loan_id": 2,
+    "date": "2026-08-06",
+    "amount": 250.0,
+    "notes": "",
+    "id": 105
+   },
+   {
+    "loan_id": 2,
+    "date": "2026-09-03",
+    "amount": 250.0,
+    "notes": "",
+    "id": 106
+   }
+  ],
+  "transactions": [],
+  "goals": [
+   {
+    "name": "Net worth goal",
+    "target": 100000.0,
+    "current": null,
+    "link": "networth",
+    "target_date": null,
+    "notes": "",
+    "id": 1
+   },
+   {
+    "name": "Spendable (all-in) goal",
+    "target": 100000.0,
+    "current": null,
+    "link": "spendable",
+    "target_date": null,
+    "notes": "",
+    "id": 2
+   }
+  ],
+  "snapshots": [
+   {
+    "date": "2026-08-29",
+    "networth": 113258.63,
+    "spendable": null,
+    "breakdown": null,
+    "notes": "Imported from spreadsheet",
+    "id": 1
+   }
+  ],
+  "recurring": [
+   {
+    "kind": "income",
+    "name": "Avg. Net Pay",
+    "amount": 4510.0,
+    "id": 1
+   },
+   {
+    "kind": "income",
+    "name": "Van Repayment",
+    "amount": 221.6,
+    "id": 2
+   },
+   {
+    "kind": "income",
+    "name": "Outlander Repayment",
+    "amount": 250.0,
+    "id": 3
+   },
+   {
+    "kind": "expense",
+    "name": "University",
+    "amount": 913.95,
+    "id": 4
+   },
+   {
+    "kind": "expense",
+    "name": "Mama",
+    "amount": 200.0,
+    "id": 5
+   },
+   {
+    "kind": "expense",
+    "name": "Fuel",
+    "amount": 80.0,
+    "id": 6
+   }
+  ],
+  "budget_items": [
+   {
+    "kind": "fixed",
+    "name": "Investing Funds",
+    "value": 200.0,
+    "id": 1
+   },
+   {
+    "kind": "fixed",
+    "name": "University Funds",
+    "value": 580.0,
+    "id": 2
+   },
+   {
+    "kind": "fixed",
+    "name": "Business Funds",
+    "value": 50.0,
+    "id": 3
+   },
+   {
+    "kind": "percent",
+    "name": "Emergency Funds",
+    "value": 75.0,
+    "id": 4
+   },
+   {
+    "kind": "percent",
+    "name": "Savings Funds",
+    "value": 25.0,
+    "id": 5
+   }
+  ],
+  "tax_items": [
+   {
+    "section": "income",
+    "name": "Gross Income",
+    "amount": 67587.29,
+    "id": 1
+   },
+   {
+    "section": "income",
+    "name": "Bank Interest",
+    "amount": 570.0,
+    "id": 2
+   },
+   {
+    "section": "income",
+    "name": "Capital Gains",
+    "amount": 0.0,
+    "id": 3
+   },
+   {
+    "section": "deduction",
+    "name": "Accountant Fee",
+    "amount": 0.0,
+    "id": 4
+   },
+   {
+    "section": "deduction",
+    "name": "Asset Loss",
+    "amount": 0.0,
+    "id": 5
+   },
+   {
+    "section": "work_expense",
+    "name": "Protective Clothes",
+    "amount": 337.0,
+    "id": 6
+   },
+   {
+    "section": "work_expense",
+    "name": "Steel Capped Safety Boots",
+    "amount": 99.0,
+    "id": 7
+   },
+   {
+    "section": "work_expense",
+    "name": "Laundry & Cleaning",
+    "amount": 150.0,
+    "id": 8
+   },
+   {
+    "section": "work_expense",
+    "name": "Tool Replaced",
+    "amount": 445.0,
+    "id": 9
+   },
+   {
+    "section": "work_expense",
+    "name": "Books & Study Materials",
+    "amount": 395.0,
+    "id": 10
+   },
+   {
+    "section": "work_expense",
+    "name": "Mobile for Field Work",
+    "amount": 540.0,
+    "id": 11
+   }
+  ]
+ }
+}

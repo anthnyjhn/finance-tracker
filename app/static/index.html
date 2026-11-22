@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Finance Tracker</title>
+<link rel="stylesheet" href="/static/styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%232a78d6'/><path d='M8 22l6-6 4 4 7-9' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+</head>
+<body>
+<div class="layout">
+  <nav class="sidebar" id="nav">
+    <div class="brand">Finance Tracker</div>
+    <a href="#/dashboard">Dashboard</a>
+    <a href="#/networth">Net worth</a>
+    <a href="#/budget">Pay budget</a>
+    <a href="#/transactions">Transactions</a>
+    <a href="#/loans">Money lent</a>
+    <a href="#/parking">Money parked</a>
+    <a href="#/investments">Investments</a>
+    <a href="#/goals">Goals</a>
+    <a href="#/forecast">Forecast</a>
+    <a href="#/tax">Tax return</a>
+    <a href="#/history">History</a>
+    <a href="#/data">Import / export</a>
+  </nav>
+  <main>
+    <header class="topbar">
+      <button class="menu" id="menuBtn" aria-label="Menu">☰</button>
+      <h1 id="pageTitle"></h1>
+      <span class="saved" id="saved" aria-live="polite"></span>
+    </header>
+    <div id="page"></div>
+  </main>
+</div>
+<div id="tooltip" class="toast" role="status"></div>
+<script src="/static/chart.umd.min.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>
